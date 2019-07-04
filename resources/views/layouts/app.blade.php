@@ -13,7 +13,6 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -153,5 +152,6 @@
         </div>
     </footer>
     @yield('extra_scripts')
+    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html>

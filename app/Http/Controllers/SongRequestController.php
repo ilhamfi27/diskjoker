@@ -12,13 +12,6 @@ use App\SongRequest;
 
 class SongRequestController extends Controller
 {
-    private function validator(array $data)
-    {
-        return Validator::make($data, [
-            'video_id' => ['required'],
-        ]);
-    }
-
     function store(Request $request)
     {
         $user = Auth::user();
@@ -70,6 +63,25 @@ class SongRequestController extends Controller
             'error' => false,
             'message' => 'Song added!',
             'song_request_data' => $songRequests
+        ]);
+    }
+
+    function getSongRequests($room, $status)
+    {
+        $songRequest = SongRequest::roomSongRequests($room,$status);
+        if ($songRequest->count() < 1) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Data not found'
+            ]);
+        }
+        return response()->json($songRequest, 200);
+    }
+
+    private function validator(array $data)
+    {
+        return Validator::make($data, [
+            'video_id' => ['required'],
         ]);
     }
 
