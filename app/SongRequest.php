@@ -10,7 +10,7 @@ class SongRequest extends Model
 {
 
     protected $fillable = [
-        'url', 'user_id', 'user_type', 'queue', 'status'  
+        'video_id', 'user_id', 'user_type', 'queue', 'status', 'title', 'thumbnail_df'
     ];
 
     function room()
@@ -52,10 +52,11 @@ class SongRequest extends Model
         return null;
     }
 
-    public static function roomSongRequests($room_id)
+    public static function roomSongRequests($room_id, $status='queue')
     {
         $songRequest = DB::table('song_requests')
                         ->where('room_id', $room_id)
+                        ->where('status', $status)
                         ->whereDay('created_at', date('d'))
                         ->whereMonth('created_at', date('m'))
                         ->whereYear('created_at', date('Y'))

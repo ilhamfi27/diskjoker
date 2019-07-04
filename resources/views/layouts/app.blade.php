@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 
@@ -23,13 +24,10 @@
     <link href="{{ asset('vendor/simple-line-icons/css/simple-line-icons.css') }}" rel="stylesheet" type="text/css">
     <!-- <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"> -->
 
-    <!-- Toastr -->
-    <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet">
-    
     <!-- Styles -->
+    <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
     <link href="{{ asset('css/landing-page.css') }}" rel="stylesheet">
 
     @yield('extra_header')
@@ -154,5 +152,6 @@
             </div>
         </div>
     </footer>
+    @yield('extra_scripts')
 </body>
 </html>

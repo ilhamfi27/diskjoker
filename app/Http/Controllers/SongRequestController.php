@@ -15,7 +15,7 @@ class SongRequestController extends Controller
     private function validator(array $data)
     {
         return Validator::make($data, [
-            'url' => ['required'],
+            'video_id' => ['required'],
         ]);
     }
 
@@ -28,16 +28,18 @@ class SongRequestController extends Controller
         $maxRequest = $user ? $room->max_song_per_user : $room->max_song_per_guest;
 
         $validator = $this->validator([
-            'url' => $request->url
+            'video_id' => $request->video_id
         ]);
 
         $totalRequest = SongRequest::countUserRequests($room->id, $user_type, $identification);
         $lastQueue = SongRequest::lastSongQueue($room->id);
 
+        $ytVideoDetail = !$validator->fails() ? $this->getYoutubeVideoDetails($request->video_id) : NULL;
+
         if($validator->fails()){
             return response()->json([
                 'warning' => true,
-                'message' => $validator->errors()->first('url')
+                'message' => $validator->errors()->first('video_id')
             ]);
         }
 
@@ -48,7 +50,7 @@ class SongRequestController extends Controller
             ]);
         } else {
             $songRequest = [
-                'url' => $request->url,
+                'video_id' => $this->getYouTubeVideoID($request->video_id),
                 'room_id' => $request->room_id,
                 'queue' => $lastQueue == null ?
                                 1 : $lastQueue + 1,
@@ -57,9 +59,12 @@ class SongRequestController extends Controller
                             null : $user->id,
                 'ip_address' => $user == null ?
                             $request->ip() : null,
+                'title' => $ytVideoDetail['title'],
+                'thumbnail_df' => $ytVideoDetail['thumbnail_hg']->url, // actually it uses thumbnail->high
             ];
             $this->insertSongRequest($songRequest);
         }
+
         $songRequests = SongRequest::roomSongRequests($request->room_id);
         return response()->json([
             'error' => false,
@@ -71,13 +76,46 @@ class SongRequestController extends Controller
     private function insertSongRequest($data)
     {
         $songRequest = new SongRequest;
-        $songRequest->url = $data['url'];
+        $songRequest->video_id = $data['video_id'];
         $songRequest->room_id = $data['room_id'];
         $songRequest->queue =  $data['queue'];
         $songRequest->status = 'queue';
         $songRequest->user_type = $data['user_type'];
         $songRequest->user_id =  $data['user_id'];
         $songRequest->ip_address =  $data['ip_address'];
+        $songRequest->title =  $data['title'];
+        $songRequest->thumbnail_df =  $data['thumbnail_df'];
         return $songRequest->save();
+    }
+    
+    private function getYouTubeVideoID($url)
+    {
+        $queryString = parse_url($url, PHP_URL_QUERY);
+        parse_str($queryString, $params);
+        if (isset($params['v']) && strlen($params['v']) > 0) {
+            return $params['v'];
+        } else {
+            return "";
+        }
+    }
+
+    private function getYoutubeVideoDetails($video_url)
+    {
+        $api_key = env('YOUTUBE_API_KEY');
+        $video_id = $this->getYouTubeVideoID($video_url);
+        $part = 'snippet%2CcontentDetails%2Cstatistics';
+
+        $api_url = 'https://www.googleapis.com/youtube/v3/videos?part=' . $part . 
+                                                                 '&id=' . $video_id . 
+                                                                '&key=' . $api_key;
+        
+        $rawDetail = json_decode(file_get_contents($api_url));
+        return [
+            'title' => $rawDetail->items[0]->snippet->title,
+            'thumbnail_df' => $rawDetail->items[0]->snippet->thumbnails->default,
+            'thumbnail_hg' => $rawDetail->items[0]->snippet->thumbnails->high,
+            'thumbnail_st' => $rawDetail->items[0]->snippet->thumbnails->standard,
+            'description' => $rawDetail->items[0]->snippet->description,
+        ];
     }
 }
