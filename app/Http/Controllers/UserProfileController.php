@@ -25,10 +25,6 @@ class UserProfileController extends Controller
         $this->middleware('auth')->only(['edit']);
     }
 
-    protected function saveFiles($file, $folder){
-        return $this->saveFile($file, $folder);
-    }
-
     public function edit($id)
     {
         $user = User::find($id);
@@ -55,7 +51,7 @@ class UserProfileController extends Controller
         
         $file = $request->file('avatar');
         $fileName = $file != NULL ? 
-                        $this->saveFile($file, 'profile_photos') : $biodata->avatar;
+                        $this->saveFiles($file, 'profile_photos') : $biodata->avatar;
 
         echo "hai0";
         
