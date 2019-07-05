@@ -12,9 +12,7 @@ use App\UserBiodata;
 
 class UserProfileController extends Controller
 {
-    use FileUpload {
-        saveFiles as protected saveFile;
-    }
+    use FileUpload;
     /**
      * Create a new controller instance.
      *
@@ -53,8 +51,6 @@ class UserProfileController extends Controller
         $fileName = $file != NULL ? 
                         $this->saveFiles($file, 'profile_photos') : $biodata->avatar;
 
-        echo "hai0";
-        
         if(Hash::check($request->old_password_confirmation, $user->password)){
             $user->name     = $request->name;
             $user->email    = $request->email;

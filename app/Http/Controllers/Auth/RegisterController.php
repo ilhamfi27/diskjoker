@@ -24,6 +24,7 @@ class RegisterController extends Controller
     |
     */
 
+    use FileUpload;
     use RegistersUsers;
 
     /**
@@ -106,7 +107,7 @@ class RegisterController extends Controller
 
         $userBiodata = [
             'nickname' => $request->nickname,
-            'avatar' => $request->avatar,
+            'avatar' => $this->saveFiles($request->avatar, 'profile_photos'),
             'user_id' => $user->id,
         ];
         $this->biodataCreate($userBiodata);
