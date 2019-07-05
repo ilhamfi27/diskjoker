@@ -33,7 +33,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -151,7 +151,7 @@
             </div>
         </div>
     </footer>
-    @yield('extra_scripts')
     <script src="{{ asset('js/main.js') }}"></script>
+    @yield('extra_scripts')
 </body>
 </html>

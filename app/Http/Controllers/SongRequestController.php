@@ -53,12 +53,13 @@ class SongRequestController extends Controller
                 'ip_address' => $user == null ?
                             $request->ip() : null,
                 'title' => $ytVideoDetail['title'],
-                'thumbnail_df' => $ytVideoDetail['thumbnail_hg']->url, // actually it uses thumbnail->high
+                // 'thumbnail_df' => $ytVideoDetail['thumbnail_hg']->url, // actually it uses thumbnail->high
+                'thumbnail_df' => '',
             ];
             $this->insertSongRequest($songRequest);
         }
 
-        $songRequests = SongRequest::roomSongRequests($request->room_id);
+        $songRequests = SongRequest::roomSongRequests($request->room_id)->last();
         return response()->json([
             'error' => false,
             'message' => 'Song added!',
@@ -66,14 +67,19 @@ class SongRequestController extends Controller
         ]);
     }
 
-    function getSongRequests($room, $status)
+    function getSongRequests($room, $status, Request $request)
     {
         $songRequest = SongRequest::roomSongRequests($room,$status);
-        if ($songRequest->count() < 1) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Data not found'
-            ]);
+        if($request != NULL){
+            $songRequest = $request->last && $request->last == 'true' ?
+            $songRequest->last() : $songRequest ;
+        } else {
+            if ($songRequest->count() < 1) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Data not found'
+                ]);
+            }
         }
         return response()->json($songRequest, 200);
     }
@@ -125,8 +131,8 @@ class SongRequestController extends Controller
         return [
             'title' => $rawDetail->items[0]->snippet->title,
             'thumbnail_df' => $rawDetail->items[0]->snippet->thumbnails->default,
+            'thumbnail_md' => $rawDetail->items[0]->snippet->thumbnails->medium,
             'thumbnail_hg' => $rawDetail->items[0]->snippet->thumbnails->high,
-            'thumbnail_st' => $rawDetail->items[0]->snippet->thumbnails->standard,
             'description' => $rawDetail->items[0]->snippet->description,
         ];
     }
