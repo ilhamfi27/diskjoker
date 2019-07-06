@@ -1,7 +1,9 @@
 /**
  * global variable
+ * I declare it with g letter on the beginning of the name of the
+ * variable
  */
-var _lastSongQueue = 0;
+var gLastSongQueue = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +55,7 @@ $(document).ready(function () {
         } else if (result.warning == true) {
           toastr.warning(result.message);
         } else {
-          _lastSongQueue = result.song_request_data.queue;
+          gLastSongQueue = result.song_request_data.queue;
           toastr.success(result.message);
           addLastRequest(result.song_request_data)
         }
@@ -96,34 +98,34 @@ function addLastRequest(data) {
   }, 3000);
 }
 
-function checkNewestSongRequest(url) {
+function fetchFromDatabase(url) {
   $.ajax({
     url: url,
     method: 'get',
     success: function (result){
-      if(_lastSongQueue < result.queue){
-        _lastSongQueue = result.queue;
-      }
+      gLastSongQueue = result.queue;
     },
     error: function(e){
       console.log("Unknown Error. Error Code " + e.status);
     },
-    async: false
   });
+}
+
+function checkNewestSongRequest(url) {
+  fetchFromDatabase(url);
   setInterval(() => {
     $.ajax({
       url: url,
       method: 'get',
       success: function (result){
-        if(_lastSongQueue < result.queue){
-          _lastSongQueue = result.queue;
+        if(gLastSongQueue < result.queue){
+          gLastSongQueue = result.queue;
           addLastRequest(result);
         }
       },
       error: function(e){
         console.log("Unknown Error. Error Code " + e.status);
       },
-      async: false
     });
   }, 2000);
 }
