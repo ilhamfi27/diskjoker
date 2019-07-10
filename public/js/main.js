@@ -129,3 +129,26 @@ function checkNewestSongRequest(url) {
     });
   }, 2000);
 }
+
+function checkEventSource(url) {
+  var es = new EventSource(url);
+  
+  es.onmessage = function(e) {
+      console.log(e);
+  }
+}
+
+function pusherListenToSongAdded() {
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+  
+  var pusher = new Pusher("6cfea0b33df989516662", {
+      cluster: 'eu',
+      forceTLS: true
+  });
+
+  var channel = pusher.subscribe('song-added');
+  channel.bind('App\\Events\\NewSongRequest', function(data) {
+      alert(JSON.stringify(data));
+  });
+}

@@ -61,11 +61,12 @@
 @endsection
 
 @section('extra_scripts')
-
+<script src="https://js.pusher.com/4.4/pusher.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    checkNewestSongRequest("{{ env('APP_URL') }}:8000/api/song_request/{{ $room->id }}/status/queue?last=true");
+    pusherListenToSongAdded();
+    // checkNewestSongRequest("{{ env('APP_URL') }}:8000/api/song_request/{{ $room->id }}/status/queue?last=true");
     // 3. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.
     var player;
@@ -74,7 +75,7 @@
         player = new YT.Player('yt_player', {
             height: '390',
             width: '640',
-            videoId: '6cmMYouVsXg',
+            // videoId: '6cmMYouVsXg',
             events: {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange

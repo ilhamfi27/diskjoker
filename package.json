@@ -23,6 +23,8 @@
         "vue": "^2.5.17"
     },
     "dependencies": {
+        "laravel-echo": "^1.5.4",
+        "pusher-js": "^4.4.0",
         "toastr": "^2.1.4"
     }
 }

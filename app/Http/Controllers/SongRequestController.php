@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Guest;
 use App\Room;
 use App\SongRequest;
+use App\Events\NewSongRequest;
 
 class SongRequestController extends Controller
 {

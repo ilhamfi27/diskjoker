@@ -10,6 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/pusher', function() {
+    event(new App\Events\HelloPusherEvent('Hi there Pusher!'));
+    return "Event has been sent!";
+});
+Route::get('/try_pusher', function(){
+    return view('try_pusher.pusher');
+});
 Route::resource('room', 'RoomController')->except([
     'index'
 ]);
