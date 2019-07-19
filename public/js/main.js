@@ -147,8 +147,8 @@ function pusherListenToSongAdded() {
       forceTLS: true
   });
 
-  var channel = pusher.subscribe('song-added');
-  channel.bind('App\\Events\\NewSongRequest', function(data) {
-      alert(JSON.stringify(data));
+  var channel = pusher.subscribe('songAddedAction');
+  channel.bind('App\\Events\\SongRequestAdded', function(data) {
+    data.title !== undefined ? addLastRequest(data) : null;
   });
 }
