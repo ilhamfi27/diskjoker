@@ -28,7 +28,7 @@ class AddColumnThumbnailDfOnSongRequests extends Migration
     public function down()
     {
         Schema::table('song_requests', function (Blueprint $table){
-            $table->dropColumn('thumbnails_df');
+            $table->dropColumn('thumbnail_df');
         });
     }
 }
