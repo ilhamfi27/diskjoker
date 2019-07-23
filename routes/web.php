@@ -23,6 +23,8 @@ Route::resource('room', 'RoomController')->except([
 Route::resource('song_request', 'SongRequestController')->only([
     'store', 'destroy'
 ]);
+// Route::post('song_request/{song_request}', 'SongRequestController@destroy')
+    //  ->name('song_request.destroy');
 Route::get('/', 'LandingController@index');
 Route::resource('/profile', 'UserProfileController')->only([
     'edit', 'update'

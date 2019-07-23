@@ -1,5 +1,5 @@
-/* footer.product_footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-} */
+.remove-song-button{
+    position: absolute; 
+    top:-15px; 
+    right: 10px;
+}

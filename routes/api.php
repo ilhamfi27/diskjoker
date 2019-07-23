@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/song_request/{room}/status/{status}', 'SongRequestController@getSongRequests');
+// Route::namespace('Api/v1/')->group(function(){
+//     Route::resource('song_request', 'SongRequestController');
+// });
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

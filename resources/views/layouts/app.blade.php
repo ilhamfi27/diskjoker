@@ -151,6 +151,9 @@
             </div>
         </div>
     </footer>
+    <script>
+        const APP_URL = "{{ env('APP_URL') }}";
+    </script>
     <script src="{{ asset('js/main.js') }}"></script>
     @yield('extra_scripts')
 </body>

@@ -20,11 +20,15 @@ class RedirectIfAuthenticated
         if (Auth::guard($guard)->check()) {
             $room = Auth::user()->room()->first();
             $userLevel = Auth::user()->userBiodata()->first()->level;
-            
-            if($userLevel == 'admin'){
-                return redirect('home/');
-            } else if ($userLevel == 'rm'){
-                return redirect('room/' . $room->url);
+
+            if($room != NULL){
+                if($userLevel == 'admin'){
+                    return redirect('home/');
+                } else if ($userLevel == 'rm'){
+                    return redirect('room/' . $room->url);
+                }
+            } else {
+                return redirect('room/create');
             }
         }
 

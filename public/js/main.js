@@ -4,11 +4,14 @@
  * variable
  */
 var gLastSongQueue = 0;
+var gUserIsRoomMaster = false;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function () {
   toastrOptions();
+  submitSongRequestForm();
+  removeSongOnClick();
 
   function toastrOptions() {
     toastr.options = {
@@ -30,14 +33,17 @@ $(document).ready(function () {
     };
   }
 
-  function getCsrfToken() {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-  }
+});
 
+function getCsrfToken() {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+}
+
+function submitSongRequestForm() {
   $('#songRequestForm').submit(function (e){
     e.preventDefault();
     getCsrfToken();
@@ -57,7 +63,6 @@ $(document).ready(function () {
         } else {
           gLastSongQueue = result.song_request_data.queue;
           toastr.success(result.message);
-          addLastRequest(result.song_request_data)
         }
       },
       error: function(e){
@@ -65,14 +70,52 @@ $(document).ready(function () {
       }
     });
   });
-});
+}
+
+function removeSongOnClick() {
+  $('#song-request-list').on('click', '.remove-song-button', function(e){
+    var songId = $(this).data('id');
+    $('#delete-song-modal').modal('show');
+    $('.delete-song-button').click(function(delEvent){
+      getCsrfToken();
+      $.ajax({
+        url: APP_URL + ":8000/song_request/" + songId,
+        method: 'delete',
+        success: function(result){
+          if(result.error == false){
+            $('#delete-song-modal').modal('hide');
+            toastr.success(result.message);
+            $(e.target).closest('.card').remove();
+            $(e.target).remove();
+          } else if(result.error == true){
+            $('#delete-song-modal').modal('hide');
+            toastr.waring(result.message);
+          }
+        },
+        error: function(error){
+          toastr.error("Unknown Error. Error Code " + error.status);
+        }
+      });
+    })
+  });
+}
 
 function addLastRequest(data) {
+  var removeButton = '';
   if (data.status == 'queue') {
     spanStatus = '<span class="badge badge-success">In Queue</span>';
   } else if (data.status == 'played') {
     spanStatus = '<span class="badge badge-warning">Played</span>';
   }
+
+  if(gUserIsRoomMaster){
+    removeButton = `
+    <button type="button" class="close remove-song-button" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    `;
+  }
+  
   $('#song-request-list').append(`
     <div class="card col mb-2">
       <div class="card-body px-0">
@@ -81,6 +124,7 @@ function addLastRequest(data) {
             <img src="${data.thumbnail_df}" width="150" alt="${data.title} Thumbnail">
           </div>
           <div class="col-8">
+            ${removeButton}
             <h5 class="card-title">${data.title}</h5>
             ${spanStatus}
           </div>
@@ -130,14 +174,6 @@ function checkNewestSongRequest(url) {
   }, 2000);
 }
 
-function checkEventSource(url) {
-  var es = new EventSource(url);
-  
-  es.onmessage = function(e) {
-      console.log(e);
-  }
-}
-
 function pusherListenToSongAdded(init) {
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
@@ -149,6 +185,10 @@ function pusherListenToSongAdded(init) {
 
   var channel = pusher.subscribe('songAddedAction');
   channel.bind('App\\Events\\SongRequestAdded', function(data) {
-    data.title !== undefined ? addLastRequest(data) : null;
+    data.songRequest.id !== undefined ? addLastRequest(data.songRequest) : null;
   });
+}
+
+function setRoomMasterTrue() {
+  gUserIsRoomMaster = true;
 }

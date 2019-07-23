@@ -30,12 +30,19 @@
                 <div id="song-request-list">
                     @forelse ($songRequests as $songRequest)
                         <div class="card col mb-2">
-                            <div class="card-body px-0">
+                            <div class="card-body px-0 card-{{ $songRequest->id }}">
                                 <div class="row">
                                     <div class="col-4">
                                         <img src="{{ $songRequest->thumbnail_df }}" width="150" alt="{{ $songRequest->title }} Thumbnail">
                                     </div>
                                     <div class="col-8">
+                                        @if(Auth::check())
+                                            @if($room->id == Auth::user()->room()->first()->id && Auth::check())
+                                                <button type="button" class="close remove-song-button" aria-label="Close" data-id="{{ $songRequest->id }}">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            @endif
+                                        @endif
                                         <h5 class="card-title">{{ $songRequest->title }}</h5>
                                         @if($songRequest->status == 'queue')
                                             <span class="badge badge-success">In Queue</span>
@@ -57,12 +64,38 @@
             </div>
         </div>
     </div>
+    <!-- Modal for Delete Song -->
+    <div id="delete-song-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are You Sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to remove this song from list. Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger delete-song-button">Yes, I'm sure</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @endsection
 
 @section('extra_scripts')
 <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
+
+@if(Auth::check())
+    @if($room->id == Auth::user()->room()->first()->id && Auth::check())
+        <script>setRoomMasterTrue()</script>
+    @endif
+@endif
 
 <script>
     var pusherInit = {

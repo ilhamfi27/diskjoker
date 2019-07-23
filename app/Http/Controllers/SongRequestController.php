@@ -63,26 +63,25 @@ class SongRequestController extends Controller
         $songRequests = SongRequest::roomSongRequests($request->room_id)->last();
         return response()->json([
             'error' => false,
-            'message' => 'Song added!',
+            'message' => 'Song Added!',
             'song_request_data' => $songRequests
         ]);
     }
 
-    function getSongRequests($room, $status, Request $request)
+    function destroy($id)
     {
-        $songRequest = SongRequest::roomSongRequests($room,$status);
-        if($request != NULL){
-            $songRequest = $request->last && $request->last == 'true' ?
-            $songRequest->last() : $songRequest ;
+        $songRequest = SongRequest::findOrFail($id);
+        if($songRequest->delete()){
+            return response()->json([
+                'error' => false,
+                'message' => 'Song Request Deleted from List!'
+            ]);
         } else {
-            if ($songRequest->count() < 1) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Data not found'
-                ]);
-            }
+            return response()->json([
+                'error' => true,
+                'message' => 'Song Request Is Not Deleted!'
+            ]);
         }
-        return response()->json($songRequest, 200);
     }
 
     private function validator(array $data)
