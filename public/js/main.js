@@ -138,11 +138,11 @@ function checkEventSource(url) {
   }
 }
 
-function pusherListenToSongAdded() {
+function pusherListenToSongAdded(pusher_key) {
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
   
-  var pusher = new Pusher("6cfea0b33df989516662", {
+  var pusher = new Pusher(pusher_key, {
       cluster: 'eu',
       forceTLS: true
   });

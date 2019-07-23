@@ -6,7 +6,7 @@
     <div class="container p-0">
         <div class="row no-gutters">
             <div class="col-lg-6 mt-3">
-                <h2>{{ $room->name }}</h2>
+                <h2 id="dj-room-name">{{ $room->name }}</h2>
                 <p class="lead mb-0">When you use a theme created by Start Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
             </div>
             <div class="col-lg-6">
@@ -65,7 +65,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    pusherListenToSongAdded();
+    pusherListenToSongAdded("{{ env('PUSHER_APP_KEY') }}");
     // checkNewestSongRequest("{{ env('APP_URL') }}:8000/api/song_request/{{ $room->id }}/status/queue?last=true");
     // 3. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.

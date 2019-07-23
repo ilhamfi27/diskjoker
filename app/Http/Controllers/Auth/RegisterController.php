@@ -48,16 +48,17 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(Request $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'nickname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        return Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'nickname' => 'required|string|max:255',
+            'avatar' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
         ]);
     }
 
@@ -67,7 +68,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function userCreate(array $data)
     {
         return User::create([
             'name' => $data['name'],
@@ -98,13 +99,19 @@ class RegisterController extends Controller
 
     protected function register(Request $request)
     {
+        $validate_form = $this->validator($request);
+        if($validate_form->fails()){
+            return redirect()->back()
+                             ->withErrors($validate_form)
+                             ->withInput();
+        }
+
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
         ];
-        $this->validator($userData);
-        $user = $this->create($userData);
+        $user = $this->userCreate($userData);
 
         $userBiodata = [
             'nickname' => $request->nickname,

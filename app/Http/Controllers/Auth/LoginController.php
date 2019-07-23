@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -41,15 +42,27 @@ class LoginController extends Controller
             $this->redirectTo();
         }
     }
+    
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    }
 
     protected function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
         $credentials['online'] = false;
+        $this->validator($request);
         if(Auth::attempt($credentials)){
-            // $user = Auth::user();
-            // $user->online = true;
-            // $user->save();
             return $this->redirectTo();
         } else {
             return redirect()->intended('/login');
