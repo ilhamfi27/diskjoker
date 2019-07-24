@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Event;
 use App\SongRequest;
 use App\Events\SongRequestAdded;
+use App\Events\SongRequestDeleted;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
     {
         SongRequest::created(function ($songRequest){
             event(new SongRequestAdded($songRequest));
+        });
+
+        SongRequest::deleted(function ($songRequest){
+            event(new SongRequestDeleted($songRequest->id));
         });
     }
 }

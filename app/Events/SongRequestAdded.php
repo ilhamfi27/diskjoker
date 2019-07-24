@@ -33,6 +33,6 @@ class SongRequestAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['songAddedAction'];
+        return ['songRequestTranscaction'];
     }
 }

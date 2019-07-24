@@ -15,15 +15,15 @@ class SongRequestDeleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $songRequest;
+    public $id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(SongRequest $songRequest)
+    public function __construct($id)
     {
-        $this->songRequest = $songRequest;
+        $this->id = $id;
     }
 
     /**
@@ -33,6 +33,6 @@ class SongRequestDeleted implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['songDeletedAction'];
+        return ['songRequestTranscaction'];
     }
 }

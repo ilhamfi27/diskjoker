@@ -29,8 +29,8 @@
                 </form>
                 <div id="song-request-list">
                     @forelse ($songRequests as $songRequest)
-                        <div class="card col mb-2">
-                            <div class="card-body px-0 card-{{ $songRequest->id }}">
+                        <div class="card col mb-2 card-{{ $songRequest->id }}">
+                            <div class="card-body px-0">
                                 <div class="row">
                                     <div class="col-4">
                                         <img src="{{ $songRequest->thumbnail_df }}" width="150" alt="{{ $songRequest->title }} Thumbnail">
@@ -38,7 +38,7 @@
                                     <div class="col-8">
                                         @if(Auth::check())
                                             @if($room->id == Auth::user()->room()->first()->id && Auth::check())
-                                                <button type="button" class="close remove-song-button" aria-label="Close" data-id="{{ $songRequest->id }}">
+                                                <button type="submit" class="close remove-song-button" aria-label="Close" data-id="{{ $songRequest->id }}">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             @endif
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="card col mb-2">
+                        <div class="card col mb-2 empty-request-card">
                             <div class="card-body">
                                 <p class="card-text">Empty Request</p>
                             </div>
@@ -78,7 +78,7 @@
                     <p>You are about to remove this song from list. Are you sure?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger delete-song-button">Yes, I'm sure</button>
+                    <button type="button" class="btn btn-danger delete-song-button-modal" data-id="">Yes, I'm sure</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -102,7 +102,7 @@
         "key": "{{ env('PUSHER_APP_KEY') }}",
         "cluster": "{{ env('PUSHER_APP_CLUSTER') }}",
     };
-    pusherListenToSongAdded(pusherInit);
+    pusherListenToSongTransaction(pusherInit);
     // checkNewestSongRequest("{{ env('APP_URL') }}:8000/api/song_request/{{ $room->id }}/status/queue?last=true");
     // 3. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.

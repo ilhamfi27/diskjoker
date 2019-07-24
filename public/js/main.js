@@ -12,6 +12,7 @@ $(document).ready(function () {
   toastrOptions();
   submitSongRequestForm();
   removeSongOnClick();
+  removeSongModalButtonClick();
 
   function toastrOptions() {
     toastr.options = {
@@ -72,31 +73,36 @@ function submitSongRequestForm() {
   });
 }
 
-function removeSongOnClick() {
-  $('#song-request-list').on('click', '.remove-song-button', function(e){
+function removeSongModalButtonClick() {
+  $('.delete-song-button-modal').click(function(delEvent){
     var songId = $(this).data('id');
-    $('#delete-song-modal').modal('show');
-    $('.delete-song-button').click(function(delEvent){
-      getCsrfToken();
-      $.ajax({
-        url: APP_URL + ":8000/song_request/" + songId,
-        method: 'delete',
-        success: function(result){
-          if(result.error == false){
-            $('#delete-song-modal').modal('hide');
-            toastr.success(result.message);
-            $(e.target).closest('.card').remove();
-            $(e.target).remove();
-          } else if(result.error == true){
-            $('#delete-song-modal').modal('hide');
-            toastr.waring(result.message);
-          }
-        },
-        error: function(error){
-          toastr.error("Unknown Error. Error Code " + error.status);
+    console.log(APP_URL + ":8000/song_request/" + songId);
+    
+    getCsrfToken();
+    $.ajax({
+      url: APP_URL + ":8000/song_request/" + songId,
+      method: 'delete',
+      success: function(result){
+        if(result.error == false){
+          $('#delete-song-modal').modal('hide');
+          toastr.success(result.message);
+        } else if(result.error == true){
+          $('#delete-song-modal').modal('hide');
+          toastr.waring(result.message);
         }
-      });
-    })
+      },
+      error: function(error){
+        toastr.error("Unknown Error. Error Code " + error.status);
+      }
+    });
+  });
+}
+
+function removeSongOnClick() {
+  $('#song-request-list').on('click', '.remove-song-button', function(event){
+    var songId = $(this).data('id');
+    $('.delete-song-button-modal').data('id', songId);
+    $('#delete-song-modal').modal('show');
   });
 }
 
@@ -174,7 +180,7 @@ function checkNewestSongRequest(url) {
   }, 2000);
 }
 
-function pusherListenToSongAdded(init) {
+function pusherListenToSongTransaction(init) {
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
   
@@ -183,9 +189,20 @@ function pusherListenToSongAdded(init) {
       forceTLS: true
   });
 
-  var channel = pusher.subscribe('songAddedAction');
+  var channel = pusher.subscribe('songRequestTranscaction');
+
   channel.bind('App\\Events\\SongRequestAdded', function(data) {
     data.songRequest.id !== undefined ? addLastRequest(data.songRequest) : null;
+    $('.empty-request-card').css({
+      "display": "hidden",
+    });
+  });
+
+  channel.bind('App\\Events\\SongRequestDeleted', function(data) {
+    $('.empty-request-card').css({
+      "display": "block",
+    });
+    $('.card-'+data.id).remove();
   });
 }
 
