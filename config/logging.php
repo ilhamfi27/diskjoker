@@ -36,13 +36,13 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => [env('APP_ENV') == 'local' ? 'daily' : 'single'],
             'ignore_exceptions' => false,
         ],
 
         'single' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'driver' => env('APP_ENV') == 'local' ? 'single' : 'errorlog',
+            'path' => env('APP_ENV') == 'local' ? storage_path('logs/laravel.log') : null,
             'level' => 'debug',
         ],
 
