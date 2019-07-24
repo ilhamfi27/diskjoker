@@ -17,17 +17,16 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            $room = Auth::user()->room()->first();
-            $userLevel = Auth::user()->userBiodata()->first()->level;
-
-            if($room != NULL){
-                if($userLevel == 'admin'){
-                    return redirect('home/');
-                } else if ($userLevel == 'rm'){
+            $room = \App\Room::where('user_id', Auth::id())->first();
+            $userLevel = \App\UserBiodata::where('user_id', Auth::id())->first()->level;
+            if($userLevel == 'admin'){
+                return redirect('home/');
+            } else if ($userLevel == 'rm'){
+                if($room != NULL){
                     return redirect('room/' . $room->url);
+                } else {
+                    return redirect('room/create');
                 }
-            } else {
-                return redirect('room/create');
             }
         }
 
