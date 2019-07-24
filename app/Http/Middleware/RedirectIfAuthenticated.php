@@ -12,14 +12,13 @@ class RedirectIfAuthenticated
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next)
     {
-        if (Auth::guard($guard)->check()) {
-            $room = Auth::user()->room()->first();
-            $userLevel = Auth::user()->userBiodata()->first()->level;
+        if (Auth::check()) {
+            $room = auth()->room()->first();
+            $userLevel = auth()->userBiodata()->first()->level;
 
             if($room != NULL){
                 if($userLevel == 'admin'){
