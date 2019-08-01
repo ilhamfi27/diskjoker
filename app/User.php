@@ -42,7 +42,7 @@ class User extends Authenticatable
         return $this->hasOne('App\Room');
     }
 
-    function userBiodata()
+    function biodata()
     {
         return $this->hasOne('App\UserBiodata');
     }

@@ -23,6 +23,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    private $authenticatedUser;
     /**
      * Where to redirect users after login.
      *
@@ -39,55 +40,41 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    
+
     /**
-     * Get a validator for an incoming registration request.
+     * The user has been authenticated.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
      */
-    protected function validator(Request $request)
+    public function authenticated(Request $request, $user)
     {
-        $this->validate($request, [
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        $this->authenticatedUser = $user;
     }
 
-    protected function login(Request $request)
+    /**
+     * The user has logged out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    protected function loggedOut(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        $credentials['online'] = false;
-        $this->validator($request);
-        if(Auth::attempt($credentials)){
-            return $this->redirectTo();
-        } else {
-            return redirect()->intended('/login');
-        }
-    }
-    
-    protected function logout(Request $request)
-    {
-        // $user = Auth::user();
-        // $user->online = false;
-        // $user->save();
-
-        $request->session()->invalidate();
-        Auth::logout();
-        return redirect('/');
+        //
     }
     
     protected function redirectTo()
     {
-        $room = \App\Room::where('user_id', Auth::id())->first();
-        $userLevel = \App\UserBiodata::where('user_id', Auth::id())->first()->level;
+        $room = $this->authenticatedUser->room()->first();
+        $userLevel = $this->authenticatedUser->biodata()->first()->level;
         if($userLevel == 'admin'){
-            return redirect('home/');
+            return 'home/';
         } else if ($userLevel == 'rm'){
             if($room != NULL){
-                return redirect('room/' . $room->url);
+                return 'room/' . $room->url;
             } else {
-                return redirect('room/create');
+                return 'room/create';
             }
         }
     }

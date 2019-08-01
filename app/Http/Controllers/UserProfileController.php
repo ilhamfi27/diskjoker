@@ -26,7 +26,7 @@ class UserProfileController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $biodata = $user->userBiodata()->first();
+        $biodata = $user->biodata()->first();
         $data = [
             'user' => $user,
             'biodata' => $biodata

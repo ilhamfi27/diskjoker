@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use \App\Http\Middleware\AlreadyHasRoom;
 use \App\Room;
 use \App\SongRequest;
 
@@ -18,6 +19,7 @@ class RoomController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->only(['create','edit']);
+        $this->middleware(AlreadyHasRoom::class)->only(['create','edit']);
     }
 
     /**
