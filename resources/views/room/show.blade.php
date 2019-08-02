@@ -98,11 +98,10 @@
 @endif
 
 <script>
-    var pusherInit = {
-        "key": "{{ env('PUSHER_APP_KEY') }}",
-        "cluster": "{{ env('PUSHER_APP_CLUSTER') }}",
-    };
-    pusherListenToSongTransaction(pusherInit);
+    pusherListenToSongTransaction({
+        key: "{{ env('PUSHER_APP_KEY') }}",
+        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+    });
     // checkNewestSongRequest("{{ env('APP_URL') }}:8000/api/song_request/{{ $room->id }}/status/queue?last=true");
     // 3. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.
