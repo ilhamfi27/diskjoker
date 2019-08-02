@@ -13,28 +13,27 @@ $(document).ready(function () {
   submitSongRequestForm();
   removeSongOnClick();
   removeSongModalButtonClick();
-
-  function toastrOptions() {
-    toastr.options = {
-      "closeButton": true,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": false,
-      "positionClass": "toast-top-right",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": "2000",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "300",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    };
-  }
-
 });
+
+function toastrOptions() {
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "2000",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "300",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
+}
 
 function getCsrfToken() {
   $.ajaxSetup({
@@ -46,7 +45,7 @@ function getCsrfToken() {
 
 function submitSongRequestForm() {
   $('#songRequestForm').submit(function (e){
-    e.preventDefault();
+    // e.preventDefault();
     getCsrfToken();
     $.ajax({
       url: $('#songRequestForm').attr('action'),
@@ -146,38 +145,6 @@ function addLastRequest(data) {
     backgroundColor: 'rgb(255,255,255)',
     color: 'rgb(0,0,0)'
   }, 3000);
-}
-
-function fetchFromDatabase(url) {
-  $.ajax({
-    url: url,
-    method: 'get',
-    success: function (result){
-      gLastSongQueue = result.queue;
-    },
-    error: function(e){
-      console.log("Unknown Error. Error Code " + e.status);
-    },
-  });
-}
-
-function checkNewestSongRequest(url) {
-  fetchFromDatabase(url);
-  setInterval(() => {
-    $.ajax({
-      url: url,
-      method: 'get',
-      success: function (result){
-        if(gLastSongQueue < result.queue){
-          gLastSongQueue = result.queue;
-          addLastRequest(result);
-        }
-      },
-      error: function(e){
-        console.log("Unknown Error. Error Code " + e.status);
-      },
-    });
-  }, 2000);
 }
 
 function pusherListenToSongTransaction(init) {
