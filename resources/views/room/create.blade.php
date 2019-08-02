@@ -34,12 +34,12 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="user_max_song_limit_time">Max Member Request Delay Time (seconds)</label>
-                            <input type="text" class="form-control" name="user_max_song_limit_time" id="user_max_song_limit_time" value="3">
+                            <input type="text" class="form-control" name="user_max_song_limit_time" id="user_max_song_limit_time" value="10800">
                         </div>
                         <div class="w-100"></div>
                         <div class="form-group col-md-6">
                             <label for="max_song_per_guest">Max Guest Request</label>
-                            <input type="text" class="form-control" name="max_song_per_guest" id="max_song_per_guest" value="10800">
+                            <input type="text" class="form-control" name="max_song_per_guest" id="max_song_per_guest" value="3">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="guest_max_song_limit_time">Max Guest Request Delay Time (seconds)</label>

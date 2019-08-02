@@ -16,7 +16,7 @@ class AlreadyHasRoom
      */
     public function handle($request, Closure $next)
     {
-        $room = \App\Room::where('user_id', Auth::id())->first();
+        $room = Auth::user()->room()->first();
         if ($room != NULL) {
             return redirect(route('room.show', $room->url));
         }
