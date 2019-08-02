@@ -45,7 +45,7 @@ function getCsrfToken() {
 
 function submitSongRequestForm() {
   $('#songRequestForm').submit(function (e){
-    // e.preventDefault();
+    e.preventDefault();
     getCsrfToken();
     $.ajax({
       url: $('#songRequestForm').attr('action'),
