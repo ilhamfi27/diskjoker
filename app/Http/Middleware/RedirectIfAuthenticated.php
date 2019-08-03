@@ -18,9 +18,11 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            dd(Auth::guard($guard)->check());
             $room = Auth::user()->room()->first();
             $userLevel = Auth::user()->biodata()->first()->level;
+            dd("authenticated? " . Auth::guard($guard)->check());
+            dd("Room " . $room);
+            dd("user Level " . $userLevel);
             if($userLevel == 'admin'){
                 return redirect('home/');
             } else if ($userLevel == 'rm'){
