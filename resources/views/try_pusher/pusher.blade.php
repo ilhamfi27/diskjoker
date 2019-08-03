@@ -13,14 +13,14 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
     <script>
     
       Pusher.logToConsole = true;
 
       //instantiate a Pusher object with our Credential's key
-      var pusher = new Pusher('6cfea0b33df989516662', {
-          cluster: 'eu',
+      var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+          cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
           encrypted: true
       });
 
