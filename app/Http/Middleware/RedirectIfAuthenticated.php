@@ -32,8 +32,7 @@ class RedirectIfAuthenticated
                     return redirect('room/create');
                 }
             }
-        } else {
-            return $next($request);
         }
+        return $next($request);
     }
 }

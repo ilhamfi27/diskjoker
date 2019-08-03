@@ -83,7 +83,7 @@ class RegisterController extends Controller
             'nickname' => $data['nickname'],
             'avatar' => $data['avatar'],
             'user_id' => $data['user_id'],
-            'level' => 'rm',
+            'level' => "rm",
         ]);
     }
 
