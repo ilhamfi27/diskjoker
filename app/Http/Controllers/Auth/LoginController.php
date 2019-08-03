@@ -65,7 +65,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $room = $this->authenticatedUser->room()->first();
-        $userLevel = $this->authenticatedUser->biodata()->first()->level;
+        $userLevel = trim($this->authenticatedUser->biodata()->first()->level);
         if($userLevel == 'admin'){
             return 'home/';
         } else if ($userLevel == 'rm'){

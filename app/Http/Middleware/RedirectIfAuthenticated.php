@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             $room = Auth::user()->room()->first();
-            $userLevel = Auth::user()->biodata()->first()->level;
+            $userLevel = trim(Auth::user()->biodata()->first()->level);
             dump("authenticated? " . Auth::guard($guard)->check());
             dump("Room " . $room);
             dump("user Level " . $userLevel);
