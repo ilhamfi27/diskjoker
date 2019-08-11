@@ -11,10 +11,6 @@
             </div>
             <div class="col-lg-6">
                 <div class="embed-responsive embed-responsive-16by9 mt-5">
-                    <!-- <iframe id="ytplayer" type="text/html" width="720" height="405"
-                        src="https://www.youtube.com/embed/M7lc1UVf-VE"
-                        frameborder="0" allowfullscreen></iframe> -->
-                    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
                     <div id="yt_player"></div>
                 </div>
                 <form action="{{ route('song_request.store') }}" method="post" id="songRequestForm">
