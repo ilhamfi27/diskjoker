@@ -9,6 +9,9 @@ RUN composer global require hirak/prestissimo
 RUN mkdir /home/app/app
 WORKDIR /home/app/app
 
+# Run composer memory limit update
+RUN COMPOSER_MEMORY_LIMIT=-1 composer update
+
 # Install dependencies
 COPY composer.json composer.json
 RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader && rm -rf /home/app/.composer
