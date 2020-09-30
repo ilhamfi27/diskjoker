@@ -28,7 +28,6 @@ jobs:
       name: "Build Images Docker" 
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t travis-ci-build-stages-demo .
+      - docker build -t $DOCKER_USERNAME/djoker .
       - docker images
-      - docker tag travis-ci-build-stages-demo $DOCKER_USERNAME/djoker
       - docker push $DOCKER_USERNAME/djoker
